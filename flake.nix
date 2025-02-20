@@ -33,7 +33,11 @@
 
         # Crane-based Nix flake configuration.
         # Based on https://github.com/ipetkov/crane/blob/master/examples/trunk-workspace/flake.nix
-        craneLib = (crane.mkLib pkgs).overrideToolchain rust-toolchain;
+        craneLib =
+          let
+            inherit (fenix.packages.${system}.fromManifestFile rust-manifest) defaultToolchain;
+          in
+          (crane.mkLib pkgs).overrideToolchain defaultToolchain;
 
         # Typst files to include in the derivation.
         # Here we include Rust files, docs and tests.
